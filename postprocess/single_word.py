@@ -1,6 +1,15 @@
-# view the output of single sample for $KEYWORD$
-# prev_embedding: the original BERT
-# after_embedding: additional pretraining on COHA texts that cover the word $KEYWORD$
+"""
+view the output of single sample for $KEYWORD$
+prev_embedding: the original BERT
+after_embedding: additional pretraining on COHA texts that cover the word $KEYWORD$
+
+index_list: [{'sentence_idx': [list of idx for the selected keyword]}, {}, {}, ...]
+eg. [{'0': [2, 14]}, {'1': [8]}, {'2': [16]}, {'3': [2, 13]}, {'4': [10]}, {'5': [18]}]
+
+embedding_dict:
+{'old': [list of embedding vectors], 'new': [list of embedding vectors]}
+
+"""
 import json
 from os import path
 import pickle
@@ -8,7 +17,9 @@ import pickle
 KEYWORD = 'coach'
 
 DIR = 'C:/Users/Mizuk/Documents/BERT/after_model/coach'
-save_path = path.join(DIR, 'pickle', 'embedding_list.p')
+embed_save_path = path.join(DIR, 'pickle', 'embedding_dict.p')
+index_save_path = path.join(DIR, 'pickle', 'index_list.p')
+
 PREV_PATH = path.join(DIR, '0_output.jsonl')
 AFTER_PATH = path.join(DIR, '1000_output.jsonl')
 
@@ -22,38 +33,55 @@ with open(AFTER_PATH) as f:
     for line in f:
         after_embedding.append(json.loads(line))
 
-embedding_list = []
-for idx in range(len(prev_embedding)):
-    prev_features = prev_embedding[idx]["features"]
-    after_features = after_embedding[idx]["features"]
-    print("sentence {}".format(idx))
+old_embedding_list = []
+new_embedding_list = []
+index_list = []
+for sentence_idx in range(len(prev_embedding)):
+    prev_features = prev_embedding[sentence_idx]["features"]
+    after_features = after_embedding[sentence_idx]["features"]
+    print("sentence {}".format(sentence_idx))
 
-    current_pair = {}
-    for i in range(len(prev_features)):
-        feature = prev_features[i]
+    word_idx_in_current_sent = []
+    for word_idx in range(len(prev_features)):
+        feature = prev_features[word_idx]
         token_text = feature["token"]
         token_embedding = feature["layers"][0]["values"]
         if token_text == KEYWORD:
-            current_pair['old'] = token_embedding
+            old_embedding_list.append(token_embedding)
             print("original BERT: ")
             print(f"token: {token_text}")
             print(f"embedding: {token_embedding[:10]}")
+            # add index to list
+            word_idx_in_current_sent.append(word_idx)
 
-        a_feature = after_features[i]
+        a_feature = after_features[word_idx]
         a_token_text = a_feature["token"]
         a_token_embedding = a_feature["layers"][0]["values"]
         if token_text == KEYWORD:
-            current_pair['new'] = a_token_embedding
+            new_embedding_list.append(a_token_embedding)
             print("new BERT: ")
             print(f"token: {a_token_text}")
             print(f"embedding: {a_token_embedding[:10]}")
             print("\n")
 
-    embedding_list.append(current_pair)
+    # add all keyword idx for this sentence to the index_list
+    index_list.append({str(sentence_idx): word_idx_in_current_sent})
+    print("index_list: {}".format(index_list))
 
-# save embedding_list to pickle to later compute cosine similarity
-with open(save_path, 'wb') as handle:
-    pickle.dump(embedding_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    print("old_embedding_list:")
+    print(old_embedding_list)
+    print("new_embedding_list:")
+    print(new_embedding_list)
+
+# save embedding_dict to pickle to later compute cosine similarity
+embedding_dict = {'old': old_embedding_list, 'new': new_embedding_list}
+print("embedding_dict:")
+print(embedding_dict)
+with open(embed_save_path, 'wb') as handle:
+    pickle.dump(embedding_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# save index_list
+with open(index_save_path, 'wb') as i_handle:
+    pickle.dump(index_list, i_handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 # for feature in prev_features:
 #     token_text = feature["token"]
