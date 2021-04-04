@@ -8,8 +8,11 @@ import re
 from nltk import tokenize
 
 # decade/directory number (from 1 to 10)
-NUM = 10
+NUM = 6
 current_decade = '19' + str(NUM) + '0'
+if current_decade == '19100':
+    current_decade = '2000'
+
 CHAR_SET = 'utf-8'
 
 # 16 words in the human similarity dataset (PWHS: pairwise human similarity)
@@ -17,14 +20,17 @@ PWHS = ["federal", "spine", "optical", "compact", "signal", "leaf", "net", "coac
         "card", "virus", "disk", "brick", "virtual", "energy", "environmental", "users", "virtual", "disk"]
 
 # words from GEMS dataset (incomplete)
-GEMS = ["environmental", "users", "virtual", "disk", "tenure", "coach", "address"]
+GEMS = ["environmental", "users", "virtual"]
 
-#
+FAILED_GEMS = ["disk", "tenure", "coach", "address"]
 
-filter_keywords = PWHS + GEMS
+
+# TODO: currently only run on a single word "coach"
+# filter_keywords = PWHS + GEMS
+filter_keywords = [FAILED_GEMS[2]]
 
 CORPUS_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/raw/'
-OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/'
+OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/coach/'
 
 # read in files
 sub_dir_list = []
@@ -38,6 +44,7 @@ print("output directory: {}".format(current_out_dir))
 
 all_counter = 0
 use_counter = 0
+full_list = []
 for file_name in os.listdir(current_dir):
     file_path = os.path.join(current_dir, file_name)
     if file_path.endswith(".txt"):
@@ -55,15 +62,23 @@ for file_name in os.listdir(current_dir):
                     print("search_word is {}".format(search_word))
                     save = True
             if save:
+                if use_counter != 0:
+                    full_list.append("\n")
                 use_counter += 1
-                # write to a new file
-                output_path = os.path.join(current_out_dir, file_name)
-                print("saving to : {}".format(output_path))
-                with open(output_path, 'w', encoding=CHAR_SET) as fw:
-                    # write sentence in lines
-                    for sent in tokenize.sent_tokenize(text):
+                for sent in tokenize.sent_tokenize(text):
+                    if not sent.startswith('@@'):
+                        sent = sent.replace("@", '')
+                        sent = re.sub(' +', ' ', sent)
                         sent += "\n"
-                        fw.write(sent)
+                        full_list.append(sent)
+    # separate document
 
 print("total number of files processed in {0}s: {1}".format(current_decade, all_counter))
 print("number of usable files after filtering: {}".format(use_counter))
+
+full_text_per_decade = current_decade + '.txt'
+output_path_agg = output_path = os.path.join(current_out_dir, full_text_per_decade)
+print("writing to: {}".format(output_path_agg))
+with open(output_path_agg, 'w', encoding=CHAR_SET) as fw:
+    # write sentence in lines
+    fw.writelines(full_list)
