@@ -1,30 +1,91 @@
-"""calculate cosine similarity b/w old and new BERT"""
+"""
+calculate cosine similarity b/w old and new BERT
+
+index_dict: {'sentence_idx': [list of idx for the selected keyword], '': [], '': [], ...}
+eg. {'0': [2, 14], '1': [8], '2': [16], '3': [2, 13], '4': [10], '5': [18]}
+
+embedding_dict:
+{'old': [list of embedding vectors], 'new': [list of embedding vectors]}
+
+"""
 
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from os import path
+import pickle
+from transformers import BertTokenizer
 
-sent_list = ["Here comes Cinderella's coach to take a princess to her fairy tale.",
-             "If you can't catch the bus, you can go for an express coach.",
-             "The coachman and footman are standing in front of the coach.",
-             "The coachman and footman are standing in front of the stage coach.",
-             ]
+MANUAL = False
+KEYWORD = 'coach'
 
-old_emb_list = [
-    [0.585397, -0.40014, -0.514952, 0.230011, -0.498719, 0.664502, 0.545653, 0.340335, -0.024614, -0.274674],
-    [0.718635, -0.937265, -0.041139, 0.081166, -0.411698, -0.193864, 0.506655, 0.940227, 0.124328, 0.067172],
-    [0.588245, -0.143918, -0.097894, -0.278353, 0.199236, -0.0422, 0.643288, 0.589765, 0.064859, -0.65601],
-    [0.471816, -0.248529, 0.34731, -0.296595, 0.283033, -0.03519, 0.79194, 0.383818, 0.077225, -0.047714],
-]
-new_emb_list = [
-    [0.340819, -0.316007, -0.388633, 0.225926, -0.352641, 0.729501, 0.338422, 0.279181, -0.131765, -0.312808],
-    [0.60515, -0.91075, 0.03075, 0.243405, -0.301251, -0.10162, 0.267794, 0.865666, 0.125156, -0.109787],
-    [0.449564, -0.114714, -0.055027, -0.151782, 0.208818, 0.154318, 0.460523, 0.400324, 0.079055, -0.770398],
-    [0.345147, -0.265823, 0.385962, -0.154863, 0.211088, 0.0707, 0.591785, 0.076552, 0.162814, -0.251823],
-]
+DIR = path.join('C:/Users/Mizuk/Documents/BERT/after_model/', KEYWORD)
+embed_save_path = path.join(DIR, 'pickle', 'embedding_dict.p')
+index_save_path = path.join(DIR, 'pickle', 'index_dict.p')
+input_path = path.join(DIR, 'text.txt')
 
-# TODO: load pickled embedding_list
-# with open(save_path, 'rb') as handle:
-#     embedding_list = pickle.load(handle)
+# find the index of WORD (not CHAR) of keyword given the sentence
+# note that this tokenizer is the BASIC one, without [CLS] and [SEP] so the indexing is different from the input texts
+def word_search(KEYWORD, sentence):
+    idx_list = []
+    tz = BertTokenizer.from_pretrained("bert-base-uncased")
+    words = tz.tokenize(sentence.lower())
+    for i, word in enumerate(words):
+        if KEYWORD.lower() in word:
+            idx_list.append(i)
+    return idx_list
+
+
+if MANUAL:
+    sent_list = ["Here comes Cinderella's coach to take a princess to her fairy tale.",
+                 "If you can't catch the bus, you can go for an express coach.",
+                 "The coachman and footman are standing in front of the coach.",
+                 "The coachman and footman are standing in front of the stage coach.",
+                 ]
+
+    old_emb_list = [
+        [0.585397, -0.40014, -0.514952, 0.230011, -0.498719, 0.664502, 0.545653, 0.340335, -0.024614, -0.274674],
+        [0.718635, -0.937265, -0.041139, 0.081166, -0.411698, -0.193864, 0.506655, 0.940227, 0.124328, 0.067172],
+        [0.588245, -0.143918, -0.097894, -0.278353, 0.199236, -0.0422, 0.643288, 0.589765, 0.064859, -0.65601],
+        [0.471816, -0.248529, 0.34731, -0.296595, 0.283033, -0.03519, 0.79194, 0.383818, 0.077225, -0.047714],
+    ]
+
+    new_emb_list = [
+        [0.340819, -0.316007, -0.388633, 0.225926, -0.352641, 0.729501, 0.338422, 0.279181, -0.131765, -0.312808],
+        [0.60515, -0.91075, 0.03075, 0.243405, -0.301251, -0.10162, 0.267794, 0.865666, 0.125156, -0.109787],
+        [0.449564, -0.114714, -0.055027, -0.151782, 0.208818, 0.154318, 0.460523, 0.400324, 0.079055, -0.770398],
+        [0.345147, -0.265823, 0.385962, -0.154863, 0.211088, 0.0707, 0.591785, 0.076552, 0.162814, -0.251823],
+    ]
+else:
+    # automatic loading from pickle
+    with open(embed_save_path, 'rb') as handle:
+        embedding_dict = pickle.load(handle)
+    old_emb_list = embedding_dict['old']
+    new_emb_list = embedding_dict['new']
+    with open(index_save_path, 'rb') as i_handle:
+        index_dict = pickle.load(i_handle)
+    print("index_dict: {}".format(index_dict))
+
+    # get sentence from input file
+    with open(input_path, 'r') as rf:
+        sent_list = [line.rstrip() for line in rf]
+    print("sent_list: {}".format(sent_list))
+
+    # verify index and embeddings match the keyword location in input texts
+    if len(sent_list) != len(index_dict):
+        raise Exception("ERROR: mismatch in length of sent_list and index_dict: {0} vs. {1}"
+                        .format(len(sent_list), len(index_dict)))
+    else:
+        # search for all occurrences of the keyword in input texts
+        for sent_idx, sentence in enumerate(sent_list):
+            print("sentence: {}".format(sentence))
+            keyword_idx = word_search(KEYWORD, sentence)
+            if len(keyword_idx) != len(index_dict[str(sent_idx)]):
+                raise Exception("ERROR: mismatch in keyword index! "
+                                "keyword_idx from input texts: {0}, index_dict[sent_idx] from pickle: {1}"
+                                .format(keyword_idx, index_dict[str(sent_idx)]))
+
+    exit()
+
 
 old_similarity_list = []
 for first_old in old_emb_list:

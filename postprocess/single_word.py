@@ -3,8 +3,8 @@ view the output of single sample for $KEYWORD$
 prev_embedding: the original BERT
 after_embedding: additional pretraining on COHA texts that cover the word $KEYWORD$
 
-index_list: [{'sentence_idx': [list of idx for the selected keyword]}, {}, {}, ...]
-eg. [{'0': [2, 14]}, {'1': [8]}, {'2': [16]}, {'3': [2, 13]}, {'4': [10]}, {'5': [18]}]
+index_dict: {'sentence_idx': [list of idx for the selected keyword], '': [], '': [], ...}
+eg. {'0': [2, 14], '1': [8], '2': [16], '3': [2, 13], '4': [10], '5': [18]}
 
 embedding_dict:
 {'old': [list of embedding vectors], 'new': [list of embedding vectors]}
@@ -18,7 +18,7 @@ KEYWORD = 'coach'
 
 DIR = 'C:/Users/Mizuk/Documents/BERT/after_model/coach'
 embed_save_path = path.join(DIR, 'pickle', 'embedding_dict.p')
-index_save_path = path.join(DIR, 'pickle', 'index_list.p')
+index_save_path = path.join(DIR, 'pickle', 'index_dict.p')
 
 PREV_PATH = path.join(DIR, '0_output.jsonl')
 AFTER_PATH = path.join(DIR, '1000_output.jsonl')
@@ -35,7 +35,7 @@ with open(AFTER_PATH) as f:
 
 old_embedding_list = []
 new_embedding_list = []
-index_list = []
+index_dict = {}
 for sentence_idx in range(len(prev_embedding)):
     prev_features = prev_embedding[sentence_idx]["features"]
     after_features = after_embedding[sentence_idx]["features"]
@@ -64,9 +64,9 @@ for sentence_idx in range(len(prev_embedding)):
             print(f"embedding: {a_token_embedding[:10]}")
             print("\n")
 
-    # add all keyword idx for this sentence to the index_list
-    index_list.append({str(sentence_idx): word_idx_in_current_sent})
-    print("index_list: {}".format(index_list))
+    # add all keyword idx for this sentence to the index_dict
+    index_dict[str(sentence_idx)] = word_idx_in_current_sent
+    print("index_dict: {}".format(index_dict))
 
     print("old_embedding_list:")
     print(old_embedding_list)
@@ -79,9 +79,9 @@ print("embedding_dict:")
 print(embedding_dict)
 with open(embed_save_path, 'wb') as handle:
     pickle.dump(embedding_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
-# save index_list
+# save index_dict
 with open(index_save_path, 'wb') as i_handle:
-    pickle.dump(index_list, i_handle, protocol=pickle.HIGHEST_PROTOCOL)
+    pickle.dump(index_dict, i_handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 # for feature in prev_features:
 #     token_text = feature["token"]
