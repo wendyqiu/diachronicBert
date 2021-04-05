@@ -15,7 +15,7 @@ This document provides detailed guidelines on how to train HistBERT:
 
 ## Data Preparation
 
-Download historical text data from https://www.english-corpora.org/coha/. As a prototype, the current HistBERT only covers ten decades (from 1900s to 2000s). We selected
+Download historical text data from [COHA] (https://www.english-corpora.org/coha/). As a prototype, the current HistBERT only covers ten decades (from 1900s to 2000s). We selected
 
 ## Google TPU Setup
 
