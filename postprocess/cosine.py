@@ -1,8 +1,8 @@
 """
 calculate cosine similarity b/w old and new BERT
 
-index_dict: {'sentence_idx': [list of idx for the selected keyword], '': [], '': [], ...}
-eg. {'0': [2, 14], '1': [8], '2': [16], '3': [2, 13], '4': [10], '5': [18]}
+index_list: {[list of idx for the selected keyword], [], []...}
+eg. [[2, 14], [8], [16], [2, 13], [10], [18]]
 
 embedding_dict:
 {'old': [list of embedding vectors], 'new': [list of embedding vectors]}
@@ -20,8 +20,8 @@ KEYWORD = 'coach'
 
 DIR = path.join('C:/Users/Mizuk/Documents/BERT/after_model/', KEYWORD)
 embed_save_path = path.join(DIR, 'pickle', 'embedding_dict.p')
-index_save_path = path.join(DIR, 'pickle', 'index_dict.p')
-input_path = path.join(DIR, 'text.txt')
+index_save_path = path.join(DIR, 'pickle', 'index_list.p')
+sentence_text_path = path.join(DIR, 'pickle', 'full_sent_text.p')
 
 # find the index of WORD (not CHAR) of keyword given the sentence
 # note that this tokenizer is the BASIC one, without [CLS] and [SEP] so the indexing is different from the input texts
@@ -62,31 +62,27 @@ else:
     old_emb_list = embedding_dict['old']
     new_emb_list = embedding_dict['new']
     with open(index_save_path, 'rb') as i_handle:
-        index_dict = pickle.load(i_handle)
-    print("index_dict: {}".format(index_dict))
-
-    # get sentence from input file
-    with open(input_path, 'r') as rf:
-        sent_list = [line.rstrip() for line in rf]
+        index_list = pickle.load(i_handle)
+    print("index_list: {}".format(index_list))
+    with open(sentence_text_path, 'rb') as s_handle:
+        sent_list = pickle.load(s_handle)
     print("sent_list: {}".format(sent_list))
 
     # verify index and embeddings match the keyword location in input texts
-    if len(sent_list) != len(index_dict):
-        raise Exception("ERROR: mismatch in length of sent_list and index_dict: {0} vs. {1}"
-                        .format(len(sent_list), len(index_dict)))
-    else:
-        # search for all occurrences of the keyword in input texts
-        for sent_idx, sentence in enumerate(sent_list):
-            print("sentence: {}".format(sentence))
-            keyword_idx = word_search(KEYWORD, sentence)
-            if len(keyword_idx) != len(index_dict[str(sent_idx)]):
-                raise Exception("ERROR: mismatch in keyword index! "
-                                "keyword_idx from input texts: {0}, index_dict[sent_idx] from pickle: {1}"
-                                .format(keyword_idx, index_dict[str(sent_idx)]))
+    if len(sent_list) != len(index_list):
+        raise Exception("ERROR: mismatch in length of sent_list and index_list: {0} vs. {1}"
+                        .format(len(sent_list), len(index_list)))
+    # else:
+    #     # search for all occurrences of the keyword in input texts
+    #     for sent_idx, sentence in enumerate(sent_list):
+    #         print("sentence: {}".format(sentence))
+    #         keyword_idx = word_search(KEYWORD, sentence)
+    #         if len(keyword_idx) != len(index_list[sent_idx]):
+    #             raise Exception("ERROR: mismatch in keyword index! "
+    #                             "keyword_idx from input texts: {0}, index_list[sent_idx] from pickle: {1}"
+    #                             .format(keyword_idx, index_list[sent_idx]))
 
-    exit()
-
-
+# compute cosine similarity
 old_similarity_list = []
 for first_old in old_emb_list:
     for second_old in old_emb_list:
@@ -96,7 +92,6 @@ for first_old in old_emb_list:
             old_similarity = \
                 cosine_similarity(np.array(first_old).reshape(1, -1), np.array(second_old).reshape(1, -1))[0][0]
             old_similarity_list.append(old_similarity)
-            print("old: sentence {0} vs. {1}: {2}".format(first + 1, second + 1, old_similarity))
 
 new_similarity_list = []
 for first_new in new_emb_list:
@@ -107,4 +102,11 @@ for first_new in new_emb_list:
             new_similarity = \
                 cosine_similarity(np.array(first_new).reshape(1, -1), np.array(second_new).reshape(1, -1))[0][0]
             new_similarity_list.append(new_similarity)
-            print("new: sentence {0} vs. {1}: {2}".format(n_first + 1, n_second + 1, new_similarity))
+
+# todo: print pairwise (traiangle) results
+for sent_idx, token_idx_list in enumerate(index_list):
+    pass
+
+
+print("old: sentence {0} vs. {1}: {2}".format(first + 1, second + 1, old_similarity))
+print("new: sentence {0} vs. {1}: {2}".format(n_first + 1, n_second + 1, new_similarity))
