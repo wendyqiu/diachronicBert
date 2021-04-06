@@ -5,10 +5,15 @@ and use these samples in the domain-specific pre-training stage
 """
 import os
 import re
-from nltk import tokenize
+from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
+
+# currently only run on a single word "coach"
+ONE_KEYWORD = False
+# TODO: full COHA
+NO_FILTER = True
 
 # decade/directory number (from 1 to 10)
-NUM = 6
+NUM = 2
 current_decade = '19' + str(NUM) + '0'
 if current_decade == '19100':
     current_decade = '2000'
@@ -24,13 +29,23 @@ GEMS = ["environmental", "users", "virtual"]
 
 FAILED_GEMS = ["disk", "tenure", "coach", "address"]
 
-
-# TODO: currently only run on a single word "coach"
-# filter_keywords = PWHS + GEMS
-filter_keywords = [FAILED_GEMS[2]]
-
 CORPUS_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/raw/'
-OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/coach/'
+OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/full/'
+
+filter_keywords = PWHS + GEMS + FAILED_GEMS
+
+if NO_FILTER:
+    filter_keywords += [' ', '.', '\n']
+
+if ONE_KEYWORD:
+    filter_keywords = [FAILED_GEMS[2]]
+    OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/coach/'
+
+# manually adding abbrev. for sentence tokenizer
+punkt_param = PunktParameters()
+punkt_param.abbrev_types = set(['dr', 'vs', 'mr', 'mrs', 'prof', 'inc', 'dr', 'vs', 'prof', 'inc', 'i.e', 'e.g', 'etc',
+                                'abbrev', 'et al', 'jan', 'feb', 'mar', 'apr', 'sep', 'sept', 'aug', 'nov', 'dec'])
+sentence_splitter = PunktSentenceTokenizer(punkt_param)
 
 # read in files
 sub_dir_list = []
@@ -38,7 +53,7 @@ for dirpath, dirnames, files in os.walk(CORPUS_DIR):
     sub_dir_list.append(dirpath)
 
 current_dir = sub_dir_list[NUM]
-current_out_dir = os.path.join(OUT_DIR, current_decade)
+current_out_dir = os.path.join(OUT_DIR, 'separated')
 print("current directory: {}".format(current_dir))
 print("output directory: {}".format(current_out_dir))
 
@@ -65,13 +80,16 @@ for file_name in os.listdir(current_dir):
                 if use_counter != 0:
                     full_list.append("\n")
                 use_counter += 1
-                for sent in tokenize.sent_tokenize(text):
+                for sent in sentence_splitter.tokenize(text):
                     if not sent.startswith('@@'):
                         sent = sent.replace("@", '')
                         sent = re.sub(' +', ' ', sent)
+                        if sent == '.':
+                            continue
                         sent += "\n"
                         full_list.append(sent)
     # separate document
+    full_list.append("\n\n")
 
 print("total number of files processed in {0}s: {1}".format(current_decade, all_counter))
 print("number of usable files after filtering: {}".format(use_counter))
