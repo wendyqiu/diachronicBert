@@ -13,16 +13,17 @@ embedding_dict:
 import json
 from os import path
 import pickle
+from operator import add
 
 KEYWORD = 'coach'
 
 DIR = 'C:/Users/Mizuk/Documents/BERT/after_model/coach'
-embed_save_path = path.join(DIR, 'pickle', 'embedding_dict.p')
-index_save_path = path.join(DIR, 'pickle', 'index_list.p')
-sentence_text_path = path.join(DIR, 'pickle', 'full_sent_text.p')
+embed_save_path = path.join(DIR, 'pickle', '12_embedding_dict.p')
+index_save_path = path.join(DIR, 'pickle', '12_index_list.p')
+sentence_text_path = path.join(DIR, 'pickle', '12_full_sent_text.p')
 
-PREV_PATH = path.join(DIR, '0_output.jsonl')
-AFTER_PATH = path.join(DIR, '1000_output.jsonl')
+PREV_PATH = path.join(DIR, 'original_output_alllayers.jsonl')
+AFTER_PATH = path.join(DIR, 'fullCOHA_output_alllayers.jsonl')
 
 prev_embedding = []
 with open(PREV_PATH) as f:
@@ -50,7 +51,9 @@ for sentence_idx in range(len(prev_embedding)):
         token_text = feature["token"]
         curr_sent_text.append(token_text)
         token_embedding = feature["layers"][0]["values"]
-        if token_text == KEYWORD:
+        for i in range(len(feature["layers"])):
+            token_embedding = list(map(add, token_embedding, feature["layers"][i]["values"]))
+        if KEYWORD in token_text:
             old_embedding_list.append(token_embedding)
             print("original BERT: ")
             print(f"token: {token_text}")
@@ -58,10 +61,13 @@ for sentence_idx in range(len(prev_embedding)):
             # add index to list
             word_idx_in_current_sent.append(word_idx)
 
+        print("word_idx: {}".format(word_idx))
         a_feature = after_features[word_idx]
         a_token_text = a_feature["token"]
         a_token_embedding = a_feature["layers"][0]["values"]
-        if token_text == KEYWORD:
+        for i in range(len(a_feature["layers"])):
+            a_token_embedding = list(map(add, a_token_embedding, a_feature["layers"][i]["values"]))
+        if KEYWORD in token_text:
             new_embedding_list.append(a_token_embedding)
             print("new BERT: ")
             print(f"token: {a_token_text}")
