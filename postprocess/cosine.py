@@ -19,9 +19,9 @@ MANUAL = False
 KEYWORD = 'coach'
 
 DIR = path.join('C:/Users/Mizuk/Documents/BERT/after_model/', KEYWORD)
-embed_save_path = path.join(DIR, 'pickle', 'embedding_dict.p')
-index_save_path = path.join(DIR, 'pickle', 'index_list.p')
-sentence_text_path = path.join(DIR, 'pickle', 'full_sent_text.p')
+embed_save_path = path.join(DIR, 'pickle', '12_embedding_dict.p')
+index_save_path = path.join(DIR, 'pickle', '12_index_list.p')
+sentence_text_path = path.join(DIR, 'pickle', '12_full_sent_text.p')
 
 # find the index of WORD (not CHAR) of keyword given the sentence
 # note that this tokenizer is the BASIC one, without [CLS] and [SEP] so the indexing is different from the input texts
@@ -92,6 +92,7 @@ for first_old in old_emb_list:
             old_similarity = \
                 cosine_similarity(np.array(first_old).reshape(1, -1), np.array(second_old).reshape(1, -1))[0][0]
             old_similarity_list.append(old_similarity)
+            print("old: sentence {0} vs. {1}: {2}".format(first + 1, second + 1, old_similarity))
 
 new_similarity_list = []
 for first_new in new_emb_list:
@@ -102,11 +103,27 @@ for first_new in new_emb_list:
             new_similarity = \
                 cosine_similarity(np.array(first_new).reshape(1, -1), np.array(second_new).reshape(1, -1))[0][0]
             new_similarity_list.append(new_similarity)
-
-# todo: print pairwise (traiangle) results
-for sent_idx, token_idx_list in enumerate(index_list):
-    pass
+            print("new: sentence {0} vs. {1}: {2}".format(n_first + 1, n_second + 1, new_similarity))
 
 
-print("old: sentence {0} vs. {1}: {2}".format(first + 1, second + 1, old_similarity))
-print("new: sentence {0} vs. {1}: {2}".format(n_first + 1, n_second + 1, new_similarity))
+# compare old and new
+difference = [new_similarity_list[i] - old_similarity_list[i] for i in range(len(old_similarity_list))]
+print("difference in similarity: ")
+print(difference)
+print("average change in similarity: {}".format(sum(difference)/len(difference)))
+
+print("max: {0} at {1}".format(max(difference), difference.index(max(difference))))
+print("min: {0} at {1}".format(min(difference), difference.index(min(difference))))
+
+print(new_similarity_list[10])
+print(new_similarity_list[62])
+
+
+
+# todo: print pairwise (triangle) results
+# for sent_idx, token_idx_list in enumerate(index_list):
+#     print("sentence {0} has {1} occurences of keyword {2}:".format(sent_idx+1, len(token_idx_list), KEYWORD))
+#     print(sent_list[sent_idx])
+#     print("")
+
+
