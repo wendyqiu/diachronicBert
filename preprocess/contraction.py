@@ -18,7 +18,11 @@ input_dir = path.join(DIR, 'separated')
 output_list = []
 for filename in listdir(input_dir):
     input_path = path.join(input_dir, filename)
-    output_path = path.join(DIR, 'full_processed', 'full_inputs.txt')
+    if not path.isfile(input_path):
+        continue
+    print("processing file: {}".format(input_path))
+    output_path = path.join(DIR, 'full_processed', 'full_inputs_10.txt')
+    print("writing to {}".format(output_path))
     if AGGREGATED:
         with open(input_path, "r") as r:
             with open(output_path, "a") as w:
