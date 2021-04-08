@@ -11,10 +11,11 @@ from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
 ONE_KEYWORD = False
 # TODO: full COHA
 NO_FILTER = True
+PAST = True
 
 # decade/directory number (from 1 to 10)
-NUM = 2
-current_decade = '19' + str(NUM) + '0'
+NUM = 7
+current_decade = '18' + str(NUM) + '0'
 if current_decade == '19100':
     current_decade = '2000'
 
@@ -29,8 +30,8 @@ GEMS = ["environmental", "users", "virtual"]
 
 FAILED_GEMS = ["disk", "tenure", "coach", "address"]
 
-CORPUS_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/raw/'
-OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/full/'
+CORPUS_DIR = 'D:/COHA/past/open'
+OUT_DIR = 'D:/COHA/filtered/full/'
 
 filter_keywords = PWHS + GEMS + FAILED_GEMS
 
@@ -39,7 +40,7 @@ if NO_FILTER:
 
 if ONE_KEYWORD:
     filter_keywords = [FAILED_GEMS[2]]
-    OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/coach/'
+    OUT_DIR = 'D:/COHA/filtered/coach/'
 
 # manually adding abbrev. for sentence tokenizer
 punkt_param = PunktParameters()
@@ -54,6 +55,10 @@ for dirpath, dirnames, files in os.walk(CORPUS_DIR):
 
 current_dir = sub_dir_list[NUM]
 current_out_dir = os.path.join(OUT_DIR, 'separated')
+
+if PAST:
+    current_out_dir = 'D:/COHA/past/past_separated/'
+
 print("current directory: {}".format(current_dir))
 print("output directory: {}".format(current_out_dir))
 
