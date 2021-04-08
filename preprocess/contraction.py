@@ -12,8 +12,8 @@ AGGREGATED = True
 KEYWORD = 'full'
 # KEYWORD = 'coach'
 
-DIR = path.join('C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/', KEYWORD)
-input_dir = path.join(DIR, 'separated')
+DIR = 'D:/COHA/past/'
+input_dir = path.join(DIR, 'past_separated')
 
 output_list = []
 for filename in listdir(input_dir):
@@ -21,7 +21,7 @@ for filename in listdir(input_dir):
     if not path.isfile(input_path):
         continue
     print("processing file: {}".format(input_path))
-    output_path = path.join(DIR, 'full_processed', 'full_inputs_10.txt')
+    output_path = path.join(DIR, 'full_processed', 'full_past_9to10.txt')
     print("writing to {}".format(output_path))
     if AGGREGATED:
         with open(input_path, "r") as r:

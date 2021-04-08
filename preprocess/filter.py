@@ -14,10 +14,10 @@ NO_FILTER = True
 PAST = True
 
 # decade/directory number (from 1 to 10)
-NUM = 7
+NUM = 10
 current_decade = '18' + str(NUM) + '0'
-if current_decade == '19100':
-    current_decade = '2000'
+if current_decade == '18100':
+    current_decade = '1900'
 
 CHAR_SET = 'utf-8'
 
