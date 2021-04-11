@@ -16,11 +16,11 @@ import pickle
 from transformers import BertTokenizer
 
 MANUAL = False
-KEYWORD = 'coach'
+KEYWORD = 'full_coha'
 
 DIR = path.join('C:/Users/Mizuk/Documents/BERT/after_model/', KEYWORD)
-embed_save_path = path.join(DIR, 'pickle', '12_embedding_dict.p')
-index_save_path = path.join(DIR, 'pickle', '12_index_list.p')
+embed_save_path = path.join(DIR, 'pickle', '12_full_embedding_dict.p')
+index_save_path = path.join(DIR, 'pickle', '12_full_index_list.p')
 sentence_text_path = path.join(DIR, 'pickle', '12_full_sent_text.p')
 
 # find the index of WORD (not CHAR) of keyword given the sentence

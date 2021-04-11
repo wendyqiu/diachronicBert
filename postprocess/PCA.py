@@ -8,11 +8,11 @@ import plotly.graph_objs as go
 from sklearn.decomposition import PCA
 from os import path
 
-KEYWORD = 'coach'
+KEYWORD = 'full_coha'
 
 DIR = path.join('C:/Users/Mizuk/Documents/BERT/after_model/', KEYWORD)
-embed_save_path = path.join(DIR, 'pickle', '12_embedding_dict.p')
-index_save_path = path.join(DIR, 'pickle', '12_index_list.p')
+embed_save_path = path.join(DIR, 'pickle', '12_full_embedding_dict.p')
+index_save_path = path.join(DIR, 'pickle', '12_full_index_list.p')
 sentence_text_path = path.join(DIR, 'pickle', '12_full_sent_text.p')
 
 def display_pca_scatterplot_2D(old_list, new_list, sentences, topn=1):
@@ -211,9 +211,12 @@ word_len = len(old_emb_list)
 old_labels = [str(x+1) for x in range(word_len)]
 new_labels = [str(x+1) + '_new' for x in range(word_len)]
 
-labels = ["Cinderella's coach", "stagecoach", "coachman", "stagecoach", "(express) coach", "express coach",
-              "coachman", "stage-coach", "head coach", "(stage) coach", "go coach", "stagecoach", "mail coaches",
-              "Coach IP", "Coach New York", "brand Coach", "Shop Coach new arrivals"]
+labels = ["Cinderella's coach", "stagecoach", "coachman", "stagecoach", "stagecoach", "mail coach",
+          "(stage) coach", "(stage) coach", "(stage) coach",
+          "coaching", "sport coach",
+          "go coach", "go coach",
+          "express coach", "express coach",
+          "Coach IP", "Coach New York", "brand Coach"]
 
 display_pca_scatterplot_2D(old_emb_list, new_emb_list, labels, topn=1)
 # display_pca_scatterplot_2D(full, user_input=['a'], words=old_labels+new_labels)
