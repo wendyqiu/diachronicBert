@@ -35,3 +35,7 @@ python create_pretraining_data.py
 ```
 
 ## Evaluation
+1. PCA Visualization 
+2. Cosine Similarity
+3. Spearman's correlation on DUPS
+
