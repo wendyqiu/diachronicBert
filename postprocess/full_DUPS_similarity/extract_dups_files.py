@@ -1,4 +1,5 @@
 """
+part one:
 extract segments from DUPS, one text file per lemma
 also store:
  a matrix for human similarity
@@ -28,6 +29,8 @@ save_DIR = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/fixed/')
 human_sim_path = path.join(save_DIR, 'human_sim.matrix')
 segments_dict_path = path.join(save_DIR, 'DUPS_segments.dict')
 index_dict_path = path.join(save_DIR, 'index_list_of.dict')
+judgements_path = path.join(save_DIR, 'judgements.dict')
+
 text_dir = path.join(save_DIR, 'segments/')
 
 # text_file_1 = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/DUPS_sentences_1.txt')
@@ -214,6 +217,10 @@ print("done writing segment_dict at {}".format(segments_dict_path))
 with open(index_dict_path, 'wb') as i_handle:
     pickle.dump(index_dict_of_list, i_handle, protocol=pickle.HIGHEST_PROTOCOL)
 print("done writing index_dict_of_list at {}".format(index_dict_path))
+
+with open(judgements_path, 'wb') as j_handle:
+    pickle.dump(judgements, j_handle, protocol=pickle.HIGHEST_PROTOCOL)
+print("done writing judgements at {}".format(judgements_path))
 
 for lemma, sent_list in segment_dict.items():
     # write sentences to one text file for each lemma

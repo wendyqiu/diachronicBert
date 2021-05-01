@@ -12,7 +12,7 @@ from operator import add
 import numpy as np
 from skbio.stats.distance import mantel
 
-KEYWORD = 'virus'
+KEYWORD = 'net'
 
 DIR = 'C:/Users/Mizuk/Documents/'
 save_DIR = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/fixed/')
@@ -195,7 +195,7 @@ def compute_correlations(sim_matrices):
             alternative='two-sided'  # greater, less
         )
         print(w)
-        print('spearman: {:.2f}    p: {:.2f}'.format(coeff, p_value))
+        print('spearman: {:.4f}    p: {:.4f}'.format(coeff, p_value))
         coeffs_[w] = coeff, p_value
     return coeffs_
 
@@ -209,7 +209,7 @@ for w in bert_coeffs:
 print("bert_sim_matrices:")
 print('{}/{} significant correlations'.format(len(bert_sig_coeffs), len(bert_coeffs)))
 for w, (c, p) in bert_sig_coeffs.items():
-    print('{}  spearman: {:.2f}    p: {:.2f}'.format(w, c, p))
+    print('{}  spearman: {:.4f}    p: {:.4f}'.format(w, c, p))
 
 
 proto_sig_coeffs = {}
@@ -221,7 +221,7 @@ for w in proto_coeffs:
 print("prototype:")
 print('{}/{} significant correlations'.format(len(proto_sig_coeffs), len(proto_coeffs)))
 for w, (c, p) in proto_sig_coeffs.items():
-    print('{}  spearman: {:.2f}    p: {:.2f}'.format(w, c, p))
+    print('{}  spearman: {:.4f}    p: {:.4f}'.format(w, c, p))
 
 
 five_sig_coeffs = {}
@@ -233,7 +233,7 @@ for w in five_coeffs:
 print("five_bert:")
 print('{}/{} significant correlations'.format(len(five_sig_coeffs), len(five_coeffs)))
 for w, (c, p) in five_sig_coeffs.items():
-    print('{}  spearman: {:.2f}    p: {:.2f}'.format(w, c, p))
+    print('{}  spearman: {:.4f}    p: {:.4f}'.format(w, c, p))
 
 
 ten_sig_coeffs = {}
@@ -245,7 +245,7 @@ for w in ten_coeffs:
 print("ten_bert:")
 print('{}/{} significant correlations'.format(len(ten_sig_coeffs), len(ten_coeffs)))
 for w, (c, p) in ten_sig_coeffs.items():
-    print('{}  spearman: {:.2f}    p: {:.2f}'.format(w, c, p))
+    print('{}  spearman: {:.4f}    p: {:.4f}'.format(w, c, p))
 
 full_sig_coeffs = {}
 full_coeffs = compute_correlations(full_sim_matrices)
@@ -256,6 +256,6 @@ for w in full_coeffs:
 print("full_bert:")
 print('{}/{} significant correlations'.format(len(full_sig_coeffs), len(full_coeffs)))
 for w, (c, p) in full_sig_coeffs.items():
-    print('{}  spearman: {:.2f}    p: {:.2f}'.format(w, c, p))
+    print('{}  spearman: {:.4f}    p: {:.4f}'.format(w, c, p))
 
 # http://scikit-bio.org/docs/0.1.3/generated/skbio.math.stats.distance.mantel.html

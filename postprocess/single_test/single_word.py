@@ -85,6 +85,7 @@ for sentence_idx in range(len(prev_embedding)):
     print("new_embedding_list:")
     print(new_embedding_list)
 
+exit()
 # save embedding_dict to pickle to later compute cosine similarity
 embedding_dict = {'old': old_embedding_list, 'new': new_embedding_list}
 print("embedding_dict:")
