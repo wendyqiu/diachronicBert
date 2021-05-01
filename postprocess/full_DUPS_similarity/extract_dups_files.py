@@ -220,9 +220,10 @@ for lemma, sent_list in segment_dict.items():
     file_name = str(lemma) + '.txt'
     text_path = path.join(text_dir, file_name)
     with open(text_path, 'w') as wf:
-        for s in sent_list:
+        for i, s in enumerate(sent_list):
             wf.write(s)
-            wf.write('\n\n')
+            if i != len(sent_list) - 1:
+                wf.write('\n')
 
 exit()
 
