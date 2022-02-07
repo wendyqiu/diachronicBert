@@ -6,7 +6,7 @@ HistBERT is the pretrained BERT (Bidirectional Encoder Representations from Tran
 
 ## Outline
 
-This document provides detailed guidelines on how to train HistBERT:
+How to train HistBERT:
 
 1. Preprocess COHA texts
 2. Google TPU Setup
