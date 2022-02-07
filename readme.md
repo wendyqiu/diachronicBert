@@ -19,6 +19,8 @@ Download historical text data from [COHA] (https://www.english-corpora.org/coha/
 
 ## Google TPU Setup
 
+A detailed tutorial here: https://github.com/google-research/bert/issues/681 
+
 ## Pretraining
 
 ```
