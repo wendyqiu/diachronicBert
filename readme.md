@@ -41,3 +41,8 @@ python create_pretraining_data.py
 2. Cosine Similarity
 3. Spearman's correlation on DUPS
 
+## This repository is based on the following work:
+
+Qiu & Xu. (2022). HistBERT: A Pre-trained Language Model for Diachronic
+LexicalSemantic Analysis. https://arxiv.org/abs/2202.03612 
+
