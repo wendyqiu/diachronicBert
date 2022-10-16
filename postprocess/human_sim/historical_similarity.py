@@ -11,7 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from scipy.stats import spearmanr
 
-DIR = 'D:/HistBERT/evaluation/human_sim/'
+DIR = ''
 embed_save_path = path.join(DIR, 'temp', '12_full_embedding_dict.p')
 index_save_path = path.join(DIR, 'temp', '12_full_index_dict.p')
 sentence_text_path = path.join(DIR, 'temp', '12_full_sent_text_dict.p')
