@@ -19,7 +19,7 @@ from tqdm import tqdm
 SPLIT = True        # output file too large, need to split and process
 THRESHOLD = 500     # number of lines per file
 
-DIR = 'C:/Users/Mizuk/Documents/'
+DIR = ''
 form_list_path = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/DUPS_form.list')
 score_list_path = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/sim_scores.list')
 DUPS_path = path.join(DIR, 'phD/csc2611/small_testset/DUPS/aggregate.csv')
