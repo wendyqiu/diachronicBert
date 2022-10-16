@@ -10,7 +10,7 @@ from os import path
 
 KEYWORD = 'full_coha'
 
-DIR = path.join('C:/Users/Mizuk/Documents/BERT/after_model/', KEYWORD)
+DIR = path.join('.../BERT/after_model/', KEYWORD)
 embed_save_path = path.join(DIR, 'pickle', '12_full_embedding_dict.p')
 index_save_path = path.join(DIR, 'pickle', '12_full_index_list.p')
 sentence_text_path = path.join(DIR, 'pickle', '12_full_sent_text.p')
@@ -111,87 +111,6 @@ def display_pca_scatterplot_2D(old_list, new_list, sentences, topn=1):
 
     plot_figure = go.Figure(data=data, layout=layout)
     plot_figure.show()
-
-# def display_pca_scatterplot_nD(full, user_input=None, words=None, topn=5, sample=10):
-#
-#     # word_vectors = np.array([model[w] for w in words])
-#
-#     word_vectors = full
-#     # three_dim = PCA(random_state=0).fit_transform(word_vectors)[:, :3]
-#     # For 2D, change the three_dim variable into something like two_dim like the following:
-#     two_dim = PCA(random_state=0).fit_transform(word_vectors)[:,:2]
-#
-#     data = []
-#     count = 0
-#
-#     for i in range(len(user_input)):
-#         trace = go.Scatter(
-#             x=two_dim[count:count + topn, 0],
-#             y=two_dim[count:count + topn, 1],
-#             # z=three_dim[count:count + topn, 2],
-#             text=words[count:count + topn],
-#             name=user_input[i],
-#             textposition="top center",
-#             textfont_size=20,
-#             mode='markers+text',
-#             marker={
-#                 'size': 10,
-#                 'opacity': 0.8,
-#                 'color': 2
-#             }
-#
-#         )
-#
-#         # For 2D, instead of using go.Scatter3d, we need to use go.Scatter and delete the z variable. Also, instead of using
-#         # variable three_dim, use the variable that we have declared earlier (e.g two_dim)
-#
-#         data.append(trace)
-#         count = count + topn
-#
-#     trace_input = go.Scatter(
-#         x=two_dim[count:, 0],
-#         y=two_dim[count:, 1],
-#         # z=three_dim[count:, 2],
-#         text=words[count:],
-#         name='input words',
-#         textposition="top center",
-#         textfont_size=20,
-#         mode='markers+text',
-#         marker={
-#             'size': 10,
-#             'opacity': 1,
-#             'color': 'black'
-#         }
-#     )
-#
-#     # For 2D, instead of using go.Scatter3d, we need to use go.Scatter and delete the z variable.  Also, instead of using
-#     # variable three_dim, use the variable that we have declared earlier (e.g two_dim)
-#
-#     data.append(trace_input)
-#
-#     # Configure the layout
-#
-#     layout = go.Layout(
-#         margin={'l': 0, 'r': 0, 'b': 0, 't': 0},
-#         showlegend=True,
-#         legend=dict(
-#             x=1,
-#             y=0.5,
-#             font=dict(
-#                 family="Courier New",
-#                 size=25,
-#                 color="black"
-#             )),
-#         font=dict(
-#             family=" Courier New ",
-#             size=15),
-#         autosize=False,
-#         width=1000,
-#         height=1000
-#     )
-#
-#     plot_figure = go.Figure(data=data, layout=layout)
-#     plot_figure.show()
 
 
 # automatic loading from pickle
