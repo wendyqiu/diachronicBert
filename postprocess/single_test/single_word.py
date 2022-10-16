@@ -17,7 +17,7 @@ from operator import add
 
 KEYWORD = 'coach'
 
-DIR = 'C:/Users/Mizuk/Documents/BERT/after_model/full_coha'
+DIR = '.../BERT/after_model/full_coha'
 embed_save_path = path.join(DIR, 'pickle', '12_full_embedding_dict.p')
 index_save_path = path.join(DIR, 'pickle', '12_full_index_list.p')
 sentence_text_path = path.join(DIR, 'pickle', '12_full_sent_text.p')
