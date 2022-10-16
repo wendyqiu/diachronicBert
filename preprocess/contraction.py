@@ -13,9 +13,7 @@ AGGREGATED = False
 KEYWORD = 'full'
 # KEYWORD = 'coach'
 
-# DIR = path.join('C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/', KEYWORD)
-# input_dir = path.join(DIR, 'separated')
-DIR = 'C:/Users/Mizuk/Documents/BERT/after_model/full_coha/pickle/human_sim/'
+DIR = '/BERT/after_model/full_coha/pickle/human_sim/'
 input_dir = path.join(DIR, 'before/')
 
 output_list = []
