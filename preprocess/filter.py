@@ -29,8 +29,8 @@ GEMS = ["environmental", "users", "virtual"]
 
 FAILED_GEMS = ["disk", "tenure", "coach", "address"]
 
-CORPUS_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/raw/'
-OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/full/'
+CORPUS_DIR = '/COHA/raw/'
+OUT_DIR = '/COHA/filtered/full/'
 
 filter_keywords = PWHS + GEMS + FAILED_GEMS
 
@@ -39,7 +39,7 @@ if NO_FILTER:
 
 if ONE_KEYWORD:
     filter_keywords = [FAILED_GEMS[2]]
-    OUT_DIR = 'C:/Users/Mizuk/Documents/phD/csc2611/COHA/filtered/coach/'
+    OUT_DIR = '/COHA/filtered/coach/'
 
 # manually adding abbrev. for sentence tokenizer
 punkt_param = PunktParameters()
