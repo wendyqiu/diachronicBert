@@ -16,7 +16,7 @@ import itertools
 
 # Load results aggregated by usage pair - using averaging
 all_data = []
-with open('C:/Users/Mizuk/Documents/phD/csc2611/small_testset/DUPS/aggregate.csv', newline='\n', mode='r') as csvfile:
+with open('.../small_testset/DUPS/aggregate.csv', newline='\n', mode='r') as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     for row in reader:
         all_data.append(row)
