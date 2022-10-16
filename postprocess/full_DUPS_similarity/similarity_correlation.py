@@ -14,7 +14,7 @@ from skbio.stats.distance import mantel
 
 KEYWORD = 'net'
 
-DIR = 'C:/Users/Mizuk/Documents/'
+DIR = ''
 save_DIR = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/fixed/')
 human_sim_path = path.join(save_DIR, 'human_sim.matrix')
 segments_dict_path = path.join(save_DIR, 'DUPS_segments.dict')
