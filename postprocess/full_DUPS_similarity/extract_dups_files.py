@@ -21,10 +21,8 @@ from tqdm import tqdm
 SPLIT = True        # output file too large, need to split and process
 THRESHOLD = 500     # number of lines per file
 
-DIR = 'C:/Users/Mizuk/Documents/'
-DUPS_path = path.join(DIR, 'phD/csc2611/small_testset/DUPS/aggregate.csv')
-# form_list_path = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/DUPS_form.list')
-# score_list_path = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/sim_scores.list')
+DIR = ''
+DUPS_path = path.join(DIR, '/small_testset/DUPS/aggregate.csv')
 save_DIR = path.join(DIR, 'BERT/after_model/full_coha/pickle/human_sim/fixed/')
 human_sim_path = path.join(save_DIR, 'human_sim.matrix')
 segments_dict_path = path.join(save_DIR, 'DUPS_segments.dict')
@@ -232,92 +230,6 @@ for lemma, sent_list in segment_dict.items():
             if i != len(sent_list) - 1:
                 wf.write('\n')
 
-exit()
-
-    # for (id_a, id_b) in judgements[lemma]:
-    #
-    #     form1, s1 = snippets[lemma][id_a]
-    #     form2, s2 = snippets[lemma][id_b]
-    #
-    #     if form1 != form2:
-    #         print("form1: {}".format(form1))
-    #         print("form2: {}".format(form2))
-    #         raise ValueError('form1 and form2 not the same')
-    #
-    #     tokens_s1 = tokenizer.tokenize(s1)
-    #     tokens_s2 = tokenizer.tokenize(s2)
-    #
-    #     new_tokens_s1 = []
-    #     skip_till = -1
-    #     target1_pos = None
-    #     for i, tok in enumerate(tokens_s1):
-    #         if i <= skip_till:
-    #             continue
-    #         if tok == '[' and tokens_s1[i + 1] == '[' and tokens_s1[i + 2] == form1:
-    #             skip_till = i + 4
-    #             target1_pos = len(new_tokens_s1)
-    #             new_tokens_s1.append(form1)
-    #         elif tok == '[' and tokens_s1[i + 1] == '[' and tokens_s1[i + 2] == lemma and tokens_s1[i + 3].startswith(
-    #                 '##'):
-    #             skip_till = i + 5
-    #             target1_pos = len(new_tokens_s1)
-    #             new_tokens_s1.append(lemma)
-    #             new_tokens_s1.append(tokens_s1[i + 3])
-    #         else:
-    #             new_tokens_s1.append(tok)
-    #
-    #     new_tokens_s2 = []
-    #     skip_till = -1
-    #     target2_pos = None
-    #     for i, tok in enumerate(tokens_s2):
-    #         if i <= skip_till:
-    #             continue
-    #         if tok == '[' and tokens_s2[i + 1] == '[' and tokens_s2[i + 2] == form2:
-    #             skip_till = i + 4
-    #             target2_pos = len(new_tokens_s2)
-    #             new_tokens_s2.append(form2)
-    #         elif tok == '[' and tokens_s2[i + 1] == '[' and tokens_s2[i + 2] == lemma and tokens_s2[i + 3].startswith(
-    #                 '##'):
-    #             skip_till = i + 5
-    #             target2_pos = len(new_tokens_s2)
-    #             new_tokens_s2.append(lemma)
-    #             new_tokens_s2.append(tokens_s2[i + 3])
-    #         else:
-    #             new_tokens_s2.append(tok)
-    #
-    #     token_ids_1 = tokenizer.encode(new_tokens_s1)
-    #     token_ids_2 = tokenizer.encode(new_tokens_s2)
-    #
-    #     with torch.no_grad():
-    #         input_ids_tensor_1 = torch.tensor([token_ids_1])
-    #         input_ids_tensor_2 = torch.tensor([token_ids_2])
-    #
-    #         outputs_1 = lm(input_ids_tensor_1)
-    #         outputs_2 = lm(input_ids_tensor_2)
-    #
-    #         #             print(outputs_1[0].shape, outputs_2[1].shape)
-    #
-    #         hidden_states_1 = np.stack([l.clone().numpy() for l in outputs_1[2]])
-    #         hidden_states_2 = np.stack([l.clone().numpy() for l in outputs_2[2]])
-    #
-    #         hidden_states_1 = hidden_states_1.squeeze(1)
-    #         hidden_states_2 = hidden_states_2.squeeze(1)
-    #
-    #         usage_vector_1 = hidden_states_1[LAYER_SEQ, target1_pos, :]
-    #         usage_vector_2 = hidden_states_2[LAYER_SEQ, target2_pos, :]
-    #
-    #         if MODE == 'sum':
-    #             usage_vector_1 = np.sum(usage_vector_1, axis=0)
-    #             usage_vector_2 = np.sum(usage_vector_2, axis=0)
-    #         else:
-    #             usage_vector_1 = usage_vector_1.reshape((usage_vector_1.shape[0] * usage_vector_1.shape[1]))
-    #             usage_vector_2 = usage_vector_2.reshape((usage_vector_2.shape[0] * usage_vector_2.shape[1]))
-    #         #
-    #         #             print(usage_vector_1.shape, usage_vector_2.shape)
-    #
-    #         sim_score = cosine_similarity(usage_vector_1, usage_vector_2)
-    #         bert_sim_matrices[lemma][id_a, id_b] = sim_score
-    #         bert_sim_matrices[lemma][id_b, id_a] = sim_score
 
 layer_seq_str = ','.join(list(map(str, LAYER_SEQ)))
 with open('{}-{}-{}.dict'.format(MODEL, MODE, layer_seq_str), 'wb') as f:
